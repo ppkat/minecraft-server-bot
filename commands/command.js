@@ -1,10 +1,11 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { sshminecraft } = require('../sshConnection')
+const { exec } = require('child_process')
+//const { sshminecraft } = require('../sshConnection')
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('comando')
-        .setDescription('Executa exatamente o comando digitado no server')
+        .setDescription('DEPRECATED.'.split('').map(char => char + '\u0336').join('') + ` Use o canal #server-console em vez disso`)
         .addStringOption(option =>
             option
                 .setName('comando')
@@ -12,11 +13,14 @@ module.exports = {
                 .setRequired(true)
         ),
 
-    async execute(interaction){
+    async execute(interaction) {
         const options = interaction.options
         const command = options.getString('comando')
 
-        sshminecraft.execCommand(`screen -S mc-survival -X stuff '${command}\\n'`)
+        //sshminecraft.execCommand(`screen -S mc-survival -X stuff '${command}\\n'`)
+
+        exec(`runuser -l  mc-survival -c "screen -S mc-survival -X stuff '${command}\\n'"`)
+
         interaction.reply('Comando executado')
     }
 }

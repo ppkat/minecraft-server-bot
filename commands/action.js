@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { sshroot } = require('../sshConnection')
+const { exec } = require('child_process')
+//const config = require('../config.json')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,13 +17,15 @@ module.exports = {
                 )
         ),
 
-    async execute(interaction){
+    async execute(interaction) {
         const options = interaction.options
         const action = options.getString('ação')
 
-        sshroot.execCommand(`sudo systemctl ${action} minecraft@survival`)
-        
+        // sshroot.execCommand(`sudo systemctl ${action} minecraft@survival`)
+
+        exec(`sudo systemctl ${action} minecraft@survival`)
+
         const gerund = action + 'ando'
-        interaction.reply(`servidor ${gerund}`)
+        await interaction.reply(`servidor ${gerund}`)
     }
 }

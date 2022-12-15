@@ -20,21 +20,21 @@ module.exports = {
                     item.includes(serverConsoleChatIDString)
                     && !item.includes('[?2004h>')
                     && !item.includes('Unknown or incomplete command, see below for error')
-                    && !item.includes('<--[HERE] ')
+                    && !item.includes('<--[HERE]')
                 )
 
                 const fileTextArr = fileTextChatLines.map(item => {
                     const removedConsoleInfoText = item.replaceAll(' [Server thread/INFO] ' + serverConsoleChatIDString, '')
                     const rightToLeftPureText = removedConsoleInfoText.slice(19) // removing the time and "[K"
                     const pureText = rightToLeftPureText.startsWith(']') ? rightToLeftPureText.slice(1, -2) : rightToLeftPureText.slice(0, -2)// removing the "]^[[m>"
-                    const formatedText = pureText.startsWith('[') ? '*' + pureText + '*'
+                    const formatedText = pureText.startsWith('[') ? '*' + pureText.replace(']', ']*')
                         : pureText.startsWith('<') ? '**' + pureText.replace('>', '>**')
                             : pureText
 
                     return formatedText
                 })
 
-                const chatFileText = fileTextArr.join('')
+                const chatFileText = fileTextArr.filter(item => !item.slice(9).startsWith('<')).join('')
 
                 const minecraftChatChannel = await client.channels.fetch(minecraftChatChannelID)
                 const minecraftConsoleChannel = await client.channels.fetch(minecraftConsoleChannelID)

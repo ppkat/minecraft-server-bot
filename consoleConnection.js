@@ -1,5 +1,4 @@
 const fs = require('fs')
-const { exec } = require('child_process')
 
 module.exports = {
     chatAddaption: function (client) {
@@ -7,41 +6,68 @@ module.exports = {
         const minecraftChatChannelID = '1050881742262767616'
         const minecraftConsoleChannelID = '1051244371875483748'
 
-        fs.watchFile(filePath, async (curr, prev) => {
-            const fileText = fs.readFile(filePath).then(data => {
-                exec(`rm ${filePath}`)
-                return data.toString()
+        function turnOnWatch() {
+
+            const watcher = fs.watch(filePath)
+            watcher.on('change', async () => {
+                const fileText = fs.readFileSync(filePath).toString()
+                if (fileText === '') return console.log('nothing inside console.txt')
+
+                const serverConsoleChatIDString = '[minecraft/DedicatedServer]: '
+                const fileTextLines = fileText.split('[m>')
+                const consoleFileText = fileTextLines.join('')
+                const fileTextChatLines = fileTextLines.filter(item =>
+                    item.includes(serverConsoleChatIDString)
+                    && !item.includes('[?2004h>')
+                    && !item.includes('Unknown or incomplete command, see below for error')
+                    && !item.includes('<--[HERE] ')
+                )
+
+                const fileTextArr = fileTextChatLines.map(item => {
+                    const removedConsoleInfoText = item.replaceAll(' [Server thread/INFO] ' + serverConsoleChatIDString, '')
+                    const rightToLeftPureText = removedConsoleInfoText.slice(19) // removing the time and "[K"
+                    const pureText = rightToLeftPureText.startsWith(']') ? rightToLeftPureText.slice(1, -2) : rightToLeftPureText.slice(0, -2)// removing the "]^[[m>"
+                    const formatedText = pureText.startsWith('[') ? '*' + pureText + '*'
+                        : pureText.startsWith('<') ? '**' + pureText.replace('>', '>**')
+                            : pureText
+
+                    return formatedText
+                })
+
+                const chatFileText = fileTextArr.join('')
+
+                const minecraftChatChannel = await client.channels.fetch(minecraftChatChannelID)
+                const minecraftConsoleChannel = await client.channels.fetch(minecraftConsoleChannelID)
+
+                const messageLimit = 2000;
+                if (chatFileText) {
+                    let textPieces = []
+                    for (let i = 0; i < chatFileText.length; i += messageLimit) {
+                        textPieces.push(chatFileText.slice(i, i + messageLimit))
+                    }
+
+                    textPieces.reverse()
+                    textPieces.forEach(async piece => await minecraftChatChannel.send(piece))
+                }
+
+                if (consoleFileText) {
+                    let textPieces = []
+                    for (let i = 0; i < chatFileText.length; i += messageLimit) {
+                        textPieces.push(consoleFileText.slice(i, i + messageLimit))
+                    }
+
+                    textPieces.reverse()
+                    textPieces.forEach(async piece => await minecraftConsoleChannel.send(piece))
+                }
+                turnOffWatch()
             })
 
-            const serverConsoleChatIDString = '[minecraft/DedicatedServer]: '
-            const fileTextLines = fileText.split('[m>')
-            const fileTextChatLines = fileTextLines.filter(item => item.includes(serverConsoleChatIDString) && !item.includes('Unknown or incomplete command, see below for error'))
-
-            const fileTextArr = fileTextChatLines.map(item => {
-                const removedConsoleInfoText = item.replaceAll(' [Server thread/INFO] ' + serverConsoleChatIDString, '')
-                const rightToLeftPureText = removedConsoleInfoText.slice(20) // removing the time and "[K"
-                const pureText = rightToLeftPureText.slice(0, -2) // removing the "^[[m>"
-                const formatedText = pureText.startsWith('[') ? '*' + pureText + '*'
-                    : pureText.startsWith('<') ? '**' + pureText.replace('>', '>**')
-                        : pureText
-
-                return formatedText
-            })
-
-            const filteredFileText = fileTextArr.join('')
-
-            const minecraftChatChannel = await client.channels.fetch(minecraftChatChannelID)
-            const minecraftConsoleChannel = await client.channels.fetch(minecraftConsoleChannelID)
-
-            if (filteredFileText) {
-                if (filteredFileText.length > 2000) await minecraftChatChannel.send(filteredFileText.slice(0, 2000))
-                else await minecraftChatChannel.send(filteredFileText)
+            function turnOffWatch() {
+                watcher.close()
+                fs.writeFileSync(filePath, '')
+                turnOnWatch()
             }
-
-            if (fileText) {
-                if (fileText.length > 2000) await minecraftConsoleChannel.send(fileText.slice(0, 2000))
-                else await minecraftConsoleChannel.send(fileText)
-            }
-        })
+        }
+        turnOnWatch()
     }
 } 

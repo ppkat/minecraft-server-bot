@@ -27,7 +27,7 @@ for (let file of eventFiles) {
 //start log
 client.once('ready', c => {
     console.log(`Bot on diretamente do ${c.user.id}`)
-    //chatAddaption(c)
+    chatAddaption(c)
 })
 
 client.login(process.env.BOT_TOKEN)

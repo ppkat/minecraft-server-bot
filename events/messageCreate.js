@@ -11,12 +11,11 @@ module.exports = {
 
         if (message.channelId === chatChannel) {
             const text = message.content
-            exec(`runuser -l minecraft -c "screen -S mc-survival -X stuff 'say ${text}\\n'"`)
+            exec(`runuser -l minecraft -c "screen -S mc-survival -X stuff 'say ${text} \\n'"`)
         }
 
         else if (message.channelId === consoleChannel) {
             const command = message.content
-            console.log(command)
             exec(`runuser -l minecraft -c "screen -S mc-survival -X stuff '${command}\\n'"`)
         }
     }

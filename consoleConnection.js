@@ -6,6 +6,10 @@ module.exports = {
         const minecraftChatChannelID = '1050881742262767616'
         const minecraftConsoleChannelID = '1051244371875483748'
 
+        async function serverStartActivities() {
+            await client.user.setPresence({ activities: [{ name: 'Server on' }], status: 'online' })
+        }
+
         function turnOnWatch() {
 
             const watcher = fs.watch(filePath)
@@ -16,14 +20,18 @@ module.exports = {
                 const serverConsoleChatIDString = '[minecraft/DedicatedServer]: '
                 const fileTextLines = fileText.split('[m>')
                 const consoleFileText = fileTextLines.join('')
-                const fileTextChatLines = fileTextLines.filter(item =>
-                    item.includes(serverConsoleChatIDString)
-                    && !item.includes('[?2004h>')
-                    && !item.includes('Unknown or incomplete command, see below for error')
-                    && !item.includes('<--[HERE]')
-                    && item.includes('[Server thread/INFO]')
-                    && !item.includes('Preparing level "world"')
-                    && !(item.includes('Done (') && item.includes(')! For help, type "help"'))
+                const fileTextChatLines = fileTextLines.filter(item => {
+                    if (item.includes('Done (') && item.includes(')! For help, type "help"')) {
+                        serverStartActivities()
+                        return false
+                    }
+                    return item.includes(serverConsoleChatIDString)
+                        && !item.includes('[?2004h>')
+                        && !item.includes('Unknown or incomplete command, see below for error')
+                        && !item.includes('<--[HERE]')
+                        && item.includes('[Server thread/INFO]')
+                        && !item.includes('Preparing level "world"')
+                }
                 )
 
                 const fileTextArr = fileTextChatLines.map(item => {
@@ -62,6 +70,7 @@ module.exports = {
                     textPieces.reverse()
                     textPieces.forEach(async piece => await minecraftConsoleChannel.send(piece))
                 }
+
                 turnOffWatch()
             })
 

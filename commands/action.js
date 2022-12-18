@@ -26,6 +26,7 @@ module.exports = {
         exec(`sudo systemctl ${action} minecraft@survival`)
 
         const gerund = action + 'ando'
+
         await interaction.reply(`servidor ${gerund}`)
     }
 }

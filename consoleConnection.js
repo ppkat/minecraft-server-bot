@@ -21,6 +21,9 @@ module.exports = {
                     && !item.includes('[?2004h>')
                     && !item.includes('Unknown or incomplete command, see below for error')
                     && !item.includes('<--[HERE]')
+                    && item.includes('[Server thread/INFO]')
+                    && !item.includes('Preparing level "world"')
+                    && !(item.includes('Done (') && item.includes(')! For help, type "help"'))
                 )
 
                 const fileTextArr = fileTextChatLines.map(item => {

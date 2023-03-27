@@ -22,7 +22,6 @@ module.exports = {
             }
             catch (err) {
                 console.log(err)
-                await interaction.editReply({ content: 'Houve um erro ao executar o comando', ephemeral: true })
             }
         }
     }

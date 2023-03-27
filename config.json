@@ -1,3 +1,4 @@
 {
-    "ssh": false
+    "ssh": false,
+    "currentServer": "create-above-and-beyond"
 }

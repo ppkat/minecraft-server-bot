@@ -1,22 +1,23 @@
-const { exec } = require('child_process')
-
 module.exports = {
     name: 'messageCreate',
     once: false,
     listen: async (client, message) => {
         if (message.author.bot) return
 
+        const serverProcess = client.serverProcess
+        if (!serverProcess) return
+
         const consoleChannel = '1051244371875483748'
         const chatChannel = '1050881742262767616'
 
         if (message.channelId === chatChannel) {
             const text = message.content
-            exec(`runuser -l minecraft -c "screen -S mc-survival -X stuff 'say ${`<${message.author.username}> ${text}`} \\n'"`)
+            serverProcess.stdin.write(`say <${message.author.username}> ${text}`)
         }
 
         else if (message.channelId === consoleChannel) {
             const command = message.content
-            exec(`runuser -l minecraft -c "screen -S mc-survival -X stuff '${command}\\n'"`)
+            serverProcess.stdin.write(command)
         }
     }
 }

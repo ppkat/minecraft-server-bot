@@ -1,7 +1,6 @@
 const { Client } = require('discord.js')
 const { readdirSync } = require('fs')
 const config = require('./config.json')
-const { chatAddaption } = require('./consoleConnection')
 
 if (config.ssh) require('./sshConnection.js')
 
@@ -27,7 +26,6 @@ for (let file of eventFiles) {
 //start log
 client.once('ready', c => {
     console.log(`Bot on diretamente do ${c.user.id}`)
-    chatAddaption(c)
 })
 
 client.login(process.env.BOT_TOKEN)

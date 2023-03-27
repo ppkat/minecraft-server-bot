@@ -1,11 +1,11 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { exec } = require('child_process')
-//const config = require('../config.json')
+const { createServerProcess } = require('../lib/childProcess');
+const { chatAdaption } = require("../lib/consoleConnection");
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('ação')
-        .setDescription('Liga/Desliga/Renicia o server')
+        .setDescription('Liga/Desliga/Renicia o server selecionado atual')
         .addStringOption(option =>
             option
                 .setName('ação')
@@ -18,27 +18,47 @@ module.exports = {
         ),
 
     async execute(interaction) {
+        console.log('starting command execution')
         const options = interaction.options
         const action = options.getString('ação')
-        await interaction.deferReply()
+        const user = interaction.client.user
+        if (!interaction.deferred) await interaction.deferReply()
 
-        // sshroot.execCommand(`sudo systemctl ${action} minecraft@survival`)
+        async function start() {
+            if (action !== 'start') return //don't ask me. For a really stranger reason, this function is ALWAYS called, although action isn't "start"
+            if (interaction.client.serverProcess) return await interaction.editReply('Servidor já está on')
 
-        exec(`sudo systemctl ${action} minecraft@survival`)
+            const serverProcess = createServerProcess(interaction.client)
+            serverProcess.stdout.on('data', (data) => chatAdaption(interaction.client, data.toString()))
 
-        const gerund = action + 'ando'
-        await interaction.editReply(`servidor ${gerund}`)
+            interaction.client.serverProcess = serverProcess
 
-        if (action === 'start' || action === 'restart') {
-            await interaction.client.user.setPresence({ activities: [{ name: 'Server startando' }], status: 'idle' })
+            await user.setPresence({ activities: [{ name: 'Server startando' }], status: 'idle' })
         }
 
-        else if (action === 'stop') {
+        async function stop() {
+            if (!interaction.client.serverProcess) return await interaction.reply('Servidor já está fechado')
+            const serverProcess = interaction.client.serverProcess
+
+            serverProcess.stdin.write('say SERVIDOR FECHANDO EM 5 SEGUNDOS\n');
+
             await new Promise(resolve => {
                 setTimeout(resolve, 5000) //server slows 5 seconds to stop
             })
-            await interaction.client.user.setPresence({ activities: [{ name: 'Server off' }], status: 'dnd' })
+
+            serverProcess.stdin.write('save-all\n');
+            serverProcess.stdin.write('stop\n');
+
+            interaction.client.serverProcess = null
+            serverProcess.kill()
+            await user.setPresence({ activities: [{ name: 'Server off' }], status: 'dnd' })
         }
 
+        if (action === 'start') await start()
+        else if (action === 'stop') await stop()
+        else if (action === 'restart') await stop(); await start()
+
+        const gerund = action + 'ando'
+        await interaction.editReply(`servidor ${gerund}`)
     }
 }

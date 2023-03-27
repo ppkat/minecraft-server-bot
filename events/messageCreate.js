@@ -12,12 +12,12 @@ module.exports = {
 
         if (message.channelId === chatChannel) {
             const text = message.content
-            serverProcess.stdin.write(`say <${message.author.username}> ${text}`)
+            serverProcess.stdin.write(`say <${message.author.username}> ${text}\n`)
         }
 
         else if (message.channelId === consoleChannel) {
             const command = message.content
-            serverProcess.stdin.write(command)
+            serverProcess.stdin.write(command + '\n')
         }
     }
 }

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { createServerProcess } = require('../lib/childProcess');
-const { chatAdaption } = require("../lib/consoleConnection");
+const { consoleConnection } = require("../lib/consoleConnection");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -29,7 +29,7 @@ module.exports = {
             if (interaction.client.serverProcess) return await interaction.editReply('Servidor já está on')
 
             const serverProcess = createServerProcess(interaction.client)
-            serverProcess.stdout.on('data', (data) => chatAdaption(interaction.client, data.toString()))
+            serverProcess.stdout.on('data', (data) => consoleConnection(interaction.client, data.toString()))
 
             interaction.client.serverProcess = serverProcess
 

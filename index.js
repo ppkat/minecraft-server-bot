@@ -25,6 +25,7 @@ for (let file of eventFiles) {
 
 //start log
 client.once('ready', c => {
+    await user.setPresence({ activities: [{ name: 'Server off' }], status: 'dnd' })
     console.log(`Bot on diretamente do ${c.user.id}`)
 })
 

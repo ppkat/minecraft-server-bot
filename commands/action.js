@@ -58,6 +58,7 @@ module.exports = {
         else if (action === 'stop') await stop()
         else if (action === 'restart') await stop(); await start()
 
+        if (interaction.replied) return
         const gerund = action + 'ando'
         await interaction.editReply(`servidor ${gerund}`)
     }

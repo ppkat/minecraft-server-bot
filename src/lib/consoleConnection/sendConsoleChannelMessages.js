@@ -5,15 +5,8 @@ module.exports = async function sendConsoleChannelMessages(client, stdout) {
     const minecraftConsoleChannel = await client.channels.fetch(minecraftConsoleChannelID)
 
     const messageLimit = 2000;
-    const maxMessagesPerSecond = 0.25
+    const maxMessagesPerSecond = 1
     const minTimeBetweenMessages = (1 / maxMessagesPerSecond) * 1000
-
-    if (!client.user.lastMessage) {
-        const message = await minecraftConsoleChannel.send(stdout)
-        message.sendedAt = new Date()
-        client.user.lastMessage = message
-        client.user.stackedMessages = []
-    }
 
     async function sendMessage(messageContent) {
         const message = await minecraftConsoleChannel.send(messageContent)
@@ -22,22 +15,23 @@ module.exports = async function sendConsoleChannelMessages(client, stdout) {
         client.user.stackedMessages = []
     }
 
-    if (client.user.lastMessage.sendedAt - new Date() >= minTimeBetweenMessages) {
+    if (!client.user.lastMessage) sendMessage(stdout)
+
+    if (new Date() - client.user.lastMessage.sendedAt >= minTimeBetweenMessages) {
         client.user.stackedMessages.push(stdout)
 
         const messageContent = client.user.stackedMessages.join('\n')
 
         if (messageContent.length > messageLimit) {
+            console.log('Needed split message')
 
             let textPieces = []
             for (let i = 0; i < messageContent.length; i += messageLimit) {
                 textPieces.push(messageContent.slice(i, i + messageLimit))
             }
 
-            textPieces.reverse()
             textPieces.forEach(async (piece, i) => {
                 if (i === 0) sendMessage(piece)
-                console.log('Needed split message')
                 client.user.stackedMessages.push(piece)
             })
         } else sendMessage(messageContent)

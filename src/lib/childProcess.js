@@ -1,9 +1,12 @@
 const { spawn } = require('child_process')
-const config = require('../config.json')
+const { readFileSync } = require('fs')
+const path = require('path')
 
 module.exports = {
     createServerProcess: function (client) {
 
+        const configPath = path.join(__dirname, '..', 'config.json')
+        const config = JSON.parse(readFileSync(configPath))
         const { currentServer } = config
         const directory = `/opt/minecraft/survival/${currentServer}`
 

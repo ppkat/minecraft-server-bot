@@ -1,9 +1,10 @@
 module.exports = async function playerCouter(client, stdout) {
-    if (!stdout.endsWith('joined the game')) return
+    if (!stdout.includes('joined the game')) return
 
     client.serverProcess.stdin.write('list\n')
 
     async function responseListener(data) {
+        console.log('responseListenner called')
         const response = data.toString()
         if (response.startsWith('There are ')) {
             serverProcess.stdout.removeListener('data', responseListener);

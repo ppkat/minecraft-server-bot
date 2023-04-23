@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { readFileSync, writeFileSync } = require('fs')
+const path = require("path")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,12 +19,13 @@ module.exports = {
     async execute(interaction) {
         const options = interaction.options
         const newCurrentServer = options.getString('servidor')
+        const configPath = path.join(__dirname, '..', 'config.json')
         await interaction.deferReply()
 
-        const config = await JSON.parse(readFileSync('./config.json'))
+        const config = await JSON.parse(readFileSync(configPath))
         config.currentServer = newCurrentServer
         const newConfig = JSON.stringify(config)
-        writeFileSync('./config.json', newConfig)
+        writeFileSync(configPath, newConfig)
 
         await interaction.editReply(`Servidor atual mudado para ${newCurrentServer}`)
     }

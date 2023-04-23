@@ -18,22 +18,23 @@ module.exports = {
         ),
 
     async execute(interaction) {
-        console.log('starting command execution')
         const options = interaction.options
         const action = options.getString('ação')
         const user = interaction.client.user
+        const { currentServer } = require('../config.json')
+
         if (!interaction.deferred) await interaction.deferReply()
 
         async function start() {
-            if (action !== 'start') return //don't ask me. For a really stranger reason, this function is ALWAYS called, although action isn't "start"
-            if (interaction.client.serverProcess) return await interaction.editReply('Servidor já está on')
+            console.log(interaction.client.serverProcess)
+            if (interaction.client.serverProcess) return await interaction.editReply('Servidor já está aberto ou em processo de abertura!!')
 
             const serverProcess = createServerProcess(interaction.client)
             serverProcess.stdout.on('data', (data) => consoleConnection(interaction.client, data.toString()))
 
             interaction.client.serverProcess = serverProcess
 
-            await user.setPresence({ activities: [{ name: 'Server startando' }], status: 'idle' })
+            await user.setPresence({ activities: [{ name: `Server startando (${currentServer})` }], status: 'idle' })
         }
 
         async function stop() {
@@ -51,12 +52,15 @@ module.exports = {
 
             interaction.client.serverProcess = null
             serverProcess.kill()
-            await user.setPresence({ activities: [{ name: 'Server off' }], status: 'dnd' })
+            await user.setPresence({ activities: [{ name: `Server off (${currentServer})` }], status: 'dnd' })
         }
 
         if (action === 'start') await start()
         else if (action === 'stop') await stop()
-        else if (action === 'restart') await stop(); await start()
+        else if (action === 'restart') {
+            await stop()
+            await start()
+        }
 
         if (interaction.replied) return
         const gerund = action + 'ando'

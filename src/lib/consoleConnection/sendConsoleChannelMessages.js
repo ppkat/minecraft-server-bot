@@ -32,7 +32,7 @@ module.exports = async function sendConsoleChannelMessages(client, stdout) {
 
             textPieces.forEach(async (piece, i) => {
                 if (i === 0) sendMessage(piece)
-                client.user.stackedMessages.push(piece)
+                else client.user.stackedMessages.push(piece)
             })
         } else sendMessage(messageContent)
     } else client.user.stackedMessages.push(stdout)

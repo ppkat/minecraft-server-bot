@@ -1,18 +1,9 @@
 module.exports = async function playerCouter(client, stdout) {
-    if (!stdout.includes('joined the game')) return
+    if (stdout.includes('joined the game')) return client.serverProcess.stdin.write('list\n') //first loop
+    if (!stdout.startsWith('There are ')) return //second loop
 
-    client.serverProcess.stdin.write('list\n')
+    const [playersOnline, totalPlayers] = stdout.match(/There are (\d+) of a max (\d+) players online:/)[1];
 
-    async function responseListener(data) {
-        console.log('responseListenner called')
-        const response = data.toString()
-        if (response.startsWith('There are ')) {
-            serverProcess.stdout.removeListener('data', responseListener);
-            const [playersOnline, totalPlayers] = response.match(/There are (\d+) of a max (\d+) players online:/)[1];
+    await client.user.setPresence({ activities: [{ name: `Server on!! ${playersOnline}/${totalPlayers} online` }], status: 'online' })
 
-            await client.user.setPresence({ activities: [{ name: `Server on!! ${playersOnline}/${totalPlayers} online` }], status: 'online' })
-        }
-    }
-
-    serverProcess.stdout.on('data', responseListener)
 }

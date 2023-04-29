@@ -1,6 +1,4 @@
-module.exports = (interaction) => {
-    if (!interaction.client.serverProcess) return await interaction.reply('Servidor já está fechado')
-
+module.exports = (client) => {
     const { currentServer } = require('../config.json')
     const serverProcess = interaction.client.serverProcess
 

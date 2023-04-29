@@ -1,6 +1,7 @@
-module.exports = (interaction) => {
-    if (interaction.client.serverProcess) return await interaction.editReply('Servidor já está aberto ou em processo de abertura!!')
+const { createServerProcess } = require('../lib/childProcess');
+const { consoleConnection } = require("../lib/consoleConnection");
 
+module.exports = (interaction) => {
     const user = interaction.client.user
     const { currentServer } = require('../config.json')
 

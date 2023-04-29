@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { createServerProcess } = require('../lib/childProcess');
-const { consoleConnection } = require("../lib/consoleConnection");
+const startServer = require("../lib/serverActions/startServer");
+const stopServer = require("../lib/serverActions/stopServer");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,11 +23,18 @@ module.exports = {
 
         if (!interaction.deferred) await interaction.deferReply()
 
-        if (action === 'start') await start()
-        else if (action === 'stop') await stop()
+        if (action === 'start') {
+            if (interaction.client.serverProcess) return await interaction.editReply('Servidor já está aberto ou em processo de abertura!!')
+            await startServer()
+        }
+        else if (action === 'stop') {
+            if (!interaction.client.serverProcess) return await interaction.reply('Servidor já está fechado')
+            await stopServer()
+        }
         else if (action === 'restart') {
-            await this.stop()
-            await start()
+            if (!interaction.client.serverProcess) return await startServer()
+            await this.stopServer()
+            await startServer()
         }
 
         if (interaction.replied) return

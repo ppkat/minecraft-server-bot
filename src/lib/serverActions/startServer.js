@@ -1,7 +1,7 @@
-const { createServerProcess } = require('../lib/childProcess');
-const { consoleConnection } = require("../lib/consoleConnection");
+const { createServerProcess } = require('../childProcess');
+const { consoleConnection } = require("../childProcess");
 
-module.exports = (client) => {
+module.exports = async (client) => {
     const user = client.user
     const { currentServer } = require('../config.json')
 

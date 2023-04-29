@@ -1,4 +1,4 @@
-module.exports = (client) => {
+module.exports = async (client) => {
     const { currentServer } = require('../config.json')
     const serverProcess = interaction.client.serverProcess
 

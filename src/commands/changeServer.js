@@ -27,6 +27,7 @@ module.exports = {
         const newConfig = JSON.stringify(config)
         writeFileSync(configPath, newConfig)
 
+        await interaction.client.user.setPresence({ activities: [{ name: `Server off (${config.currentServer})` }], status: 'dnd' })
         await interaction.editReply(`Servidor atual mudado para ${newCurrentServer}`)
     }
 }

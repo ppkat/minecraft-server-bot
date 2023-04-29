@@ -23,18 +23,19 @@ module.exports = {
 
         if (!interaction.deferred) await interaction.deferReply()
 
+        const client = interaction.client
         if (action === 'start') {
-            if (interaction.client.serverProcess) return await interaction.editReply('Servidor já está aberto ou em processo de abertura!!')
-            await startServer()
+            if (client.serverProcess) return await interaction.editReply('Servidor já está aberto ou em processo de abertura!!')
+            await startServer(client)
         }
         else if (action === 'stop') {
-            if (!interaction.client.serverProcess) return await interaction.reply('Servidor já está fechado')
-            await stopServer()
+            if (!client.serverProcess) return await interaction.reply('Servidor já está fechado')
+            await stopServer(client)
         }
         else if (action === 'restart') {
-            if (!interaction.client.serverProcess) return await startServer()
-            await this.stopServer()
-            await startServer()
+            if (!client.serverProcess) return await startServer(client)
+            await this.stopServer(client)
+            await startServer(client)
         }
 
         if (interaction.replied) return

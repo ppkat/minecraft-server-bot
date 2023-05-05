@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const getBackupChoices = require('../lib/commandsHelpers/getBackupChoices')
+const path = require("path")
 
 const backupsChoices = getBackupChoices()
 

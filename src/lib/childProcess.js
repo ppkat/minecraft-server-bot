@@ -11,9 +11,6 @@ module.exports = {
         const directory = `/opt/minecraft/survival/${currentServer}`
 
         const serverProcess = spawn('bash', ['start.sh'], { cwd: directory })
-        serverProcess.stdout.on('data', (data) => {
-            console.log(`stdout: ${data}`);
-        });
 
         serverProcess.stderr.on('data', (data) => {
             console.error(`stderr: ${data}`);

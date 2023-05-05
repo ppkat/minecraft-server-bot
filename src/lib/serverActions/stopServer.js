@@ -1,5 +1,5 @@
 module.exports = async (client) => {
-    const { currentServer } = require('../config.json')
+    const { currentServer } = require('../../config.json')
     const serverProcess = interaction.client.serverProcess
 
     serverProcess.stdin.write('say SERVIDOR FECHANDO EM 5 SEGUNDOS\n');

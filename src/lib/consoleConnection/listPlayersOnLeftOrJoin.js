@@ -5,11 +5,11 @@ module.exports = (client, stdout) => {
     if (stdout.includes('joined the game') || stdout.includes('left the game')) return client.serverProcess.stdin.write('list\n') //first loop
     if (!stdout.includes('There are ')) return //second loop
 
-    const lisPlayersRelatedFunctionsDir = path.join(__dirname, 'listPlayersRelatedFunctions')
-    const lisPlayersRelatedFunctions = fs.readdirSync(lisPlayersRelatedFunctionsDir)
+    const listPlayersRelatedFunctionsDir = path.join(__dirname, 'listPlayersRelatedFunctions')
+    const listPlayersRelatedFunctions = fs.readdirSync(listPlayersRelatedFunctionsDir)
 
-    lisPlayersRelatedFunctions.forEach(item => {
-        const listPlayerRelatedFunction = require(item)
+    listPlayersRelatedFunctions.forEach(item => {
+        const listPlayerRelatedFunction = require(`${listPlayersRelatedFunctionsDir}/${item}`)
         listPlayerRelatedFunction(client, stdout)
     })
 }

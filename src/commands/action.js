@@ -29,7 +29,7 @@ module.exports = {
             await startServer(client)
         }
         else if (action === 'stop') {
-            if (!client.serverProcess) return await interaction.reply('Servidor já está fechado')
+            if (!client.serverProcess) return await interaction.editReply('Servidor já está fechado')
             await stopServer(client)
         }
         else if (action === 'restart') {

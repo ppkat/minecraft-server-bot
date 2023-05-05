@@ -1,9 +1,9 @@
 const { createServerProcess } = require('../childProcess');
-const { consoleConnection } = require("../childProcess");
+const { consoleConnection } = require("../consoleConnection");
 
 module.exports = async (client) => {
     const user = client.user
-    const { currentServer } = require('../config.json')
+    const { currentServer } = require('../../config.json')
 
     const serverProcess = createServerProcess(client)
     serverProcess.stdout.on('data', (data) => consoleConnection(client, data.toString()))

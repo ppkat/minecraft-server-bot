@@ -8,6 +8,8 @@ module.exports = (client, stdout) => {
     const listPlayersRelatedFunctionsDir = path.join(__dirname, 'listPlayersRelatedFunctions')
     const listPlayersRelatedFunctions = fs.readdirSync(listPlayersRelatedFunctionsDir)
 
+    console.log('arquivos', listPlayersRelatedFunctions)
+
     listPlayersRelatedFunctions.forEach(item => {
         const listPlayerRelatedFunction = require(`${listPlayersRelatedFunctionsDir}/${item}`)
         listPlayerRelatedFunction(client, stdout)

@@ -12,7 +12,8 @@ module.exports = {
                 .setDescription('o servidor no qual se tornará a seleção atual')
                 .addChoices(
                     { name: 'Create Above and Beyond', value: 'create-above-and-beyond' },
-                    { name: 'Era do Futurismo', value: 'eradofuturismo' }
+                    { name: 'Era do Futurismo', value: 'eradofuturismo' },
+                    { name: 'Fangirl', value: 'fangirl' }
                 )
         ),
 

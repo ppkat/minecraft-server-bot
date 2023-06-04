@@ -15,7 +15,7 @@ module.exports = async function sendConsoleChannelMessages(client, stdout) {
         client.user.stackedMessages = []
     }
 
-    if (!client.user.lastMessage) sendMessage(stdout)
+    if (!client.user.lastMessage) return sendMessage(stdout)
 
     if (new Date() - client.user.lastMessage.sendedAt >= minTimeBetweenMessages) {
         client.user.stackedMessages.push(stdout)
@@ -25,15 +25,12 @@ module.exports = async function sendConsoleChannelMessages(client, stdout) {
         if (messageContent.length > messageLimit) {
             console.log('Needed split message')
 
-            let textPieces = []
             for (let i = 0; i < messageContent.length; i += messageLimit) {
-                textPieces.push(messageContent.slice(i, i + messageLimit))
-            }
-
-            textPieces.forEach(async (piece, i) => {
+                const piece = messageContent.slice(i, i + messageLimit)
                 if (i === 0) sendMessage(piece)
                 else client.user.stackedMessages.push(piece)
-            })
+            }
+
         } else sendMessage(messageContent)
     } else client.user.stackedMessages.push(stdout)
 }

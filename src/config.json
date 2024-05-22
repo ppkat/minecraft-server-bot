@@ -1,4 +1,5 @@
 {
     "ssh": false,
-    "currentServer": "create-above-and-beyond"
+    "currentServer": "ATM9",
+    "baseDirectory": "/home/minecraft/server/"
 }

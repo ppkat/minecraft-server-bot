@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "del /F /Q mine-server.zip && 7z a mine-server_temp.zip * -xr!node_modules && rename mine-server_temp.zip mine-server.zip && scp ./mine-server.zip minecraft@192.168.0.116:/home/minecraft/bot/",
+    "start": "node /home/minecraft/bot/src/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +16,7 @@
     "discord-api-types": "^0.37.12",
     "discord.js": "^14.5.0",
     "dotenv": "^16.0.3",
+    "minecraft-protocol": "^1.26.5",
     "node-ssh": "^13.0.0"
   }
 }

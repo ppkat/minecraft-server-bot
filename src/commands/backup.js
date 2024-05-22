@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 const getBackupChoices = require('../lib/commandsHelpers/getBackupChoices')
 const path = require("path")
+const { baseDirectory } = require('../config.json')
 
 const backupsChoices = getBackupChoices()
 
@@ -29,7 +30,7 @@ module.exports = {
         await interaction.deferReply()
 
         const { currentServer } = require('../config.json')
-        const updatedBackupsPath = path.join('/opt/minecraft/survival', currentServer, 'backups')
+        const updatedBackupsPath = path.join(baseDirectory, currentServer, 'backups')
 
         //subCommands handling
         const subcommandName = interaction.options.getSubcommand()

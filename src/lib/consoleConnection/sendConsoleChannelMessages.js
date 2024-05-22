@@ -9,10 +9,10 @@ module.exports = async function sendConsoleChannelMessages(client, stdout) {
     const minTimeBetweenMessages = (1 / maxMessagesPerSecond) * 1000
 
     async function sendMessage(messageContent) {
+        client.user.stackedMessages = []
         const message = await minecraftConsoleChannel.send(messageContent)
         message.sendedAt = new Date()
         client.user.lastMessage = message
-        client.user.stackedMessages = []
     }
 
     if (!client.user.lastMessage) return sendMessage(stdout)

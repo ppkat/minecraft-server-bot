@@ -7,23 +7,11 @@ module.exports = {
 
         const configPath = path.join(__dirname, '..', 'config.json')
         const config = JSON.parse(readFileSync(configPath))
-        const { currentServer } = config
-        const directory = `/opt/minecraft/survival/${currentServer}`
+        const { currentServer, baseDirectory } = config
+        const directory = `${baseDirectory}${currentServer}`
 
-        //verify if minecraft version is above 1.16, because the server structure is different and java version too
-        function isMinecraftVersionAbove116() {
-            const fileNames = readdirSync(directory)
-
-            return fileNames.some(item => item.endsWith('.json'))
-        }
-
-        const jdk17Path = {
-            JAVA_FANGIRL: '/opt/minecraft/survival/fangirl/jdk-17.0.7',
-            PATH: process.env.PATH
-        };
-
-        const env = isMinecraftVersionAbove116() ? jdk17Path : process.env
-        const serverProcess = spawn('bash', ['start.sh'], { cwd: directory, env })
+        const startFileName = fs.readdirSync(directory).filter(file => file.endsWith('.sh'))
+        const serverProcess = spawn('bash', [startFileName], { cwd: directory })
 
         serverProcess.stderr.on('data', (data) => {
             console.error(`stderr: ${data}`);
@@ -31,6 +19,9 @@ module.exports = {
 
         serverProcess.on('close', (code) => {
             client.serverProcess = null
+            serverProcess.stdout.destroy()
+            serverProcess.stdin.destroy()
+            serverProcess.kill()
             console.log(`child process exited with code ${code}`);
         });
 

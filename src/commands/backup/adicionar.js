@@ -1,4 +1,5 @@
 const { exec } = require('node:child_process')
+const { registerCommands } = require('../../commands')
 
 module.exports = {
     async execute(i, backupsPath) {
@@ -14,6 +15,8 @@ module.exports = {
 
         exec(createBackupCommand, { cwd: backupsPath }, (err, stdout, stderr) => {
             if (err) return i.editReply(`houve um erro ao executar o comando no linux: ${err}`)
+
+            registerCommands(i.client) //reload the options on restore command
             i.editReply(`backup **${formattedDate}.zip** adicionado com sucesso`)
             console.log(stdout)
             console.error(stderr)

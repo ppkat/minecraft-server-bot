@@ -1,6 +1,7 @@
 const { spawn } = require('child_process')
 const { readFileSync, readdirSync } = require('fs')
 const path = require('path')
+const { startFileName } = require('../config.json')
 
 module.exports = {
     createServerProcess: function (client) {
@@ -8,9 +9,8 @@ module.exports = {
         const configPath = path.join(__dirname, '..', 'config.json')
         const config = JSON.parse(readFileSync(configPath))
         const { currentServer, baseDirectory } = config
-        const directory = `${baseDirectory}${currentServer}`
+        const directory = path.join(baseDirectory, currentServer);
 
-        const startFileName = fs.readdirSync(directory).filter(file => file.endsWith('.sh'))
         const serverProcess = spawn('bash', [startFileName], { cwd: directory })
 
         serverProcess.stderr.on('data', (data) => {

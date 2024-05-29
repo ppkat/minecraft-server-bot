@@ -5,7 +5,7 @@ module.exports = async function sendConsoleChannelMessages(client, stdout) {
     const minecraftConsoleChannel = await client.channels.fetch(minecraftConsoleChannelID)
 
     const messageLimit = 2000;
-    const maxMessagesPerSecond = 1
+    const maxMessagesPerSecond = 0.5
     const minTimeBetweenMessages = (1 / maxMessagesPerSecond) * 1000
 
     async function sendMessage(messageContent) {

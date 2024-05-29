@@ -1,5 +1,8 @@
 {
     "ssh": false,
     "currentServer": "ATM9",
-    "baseDirectory": "/home/minecraft/server/"
+    "startFileName": "run.sh",
+    "baseDirectory": "/home/minecraft/server",
+    "maxDailyPlayerTime": 36000000000000,
+    "players": []
 }

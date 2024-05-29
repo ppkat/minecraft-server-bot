@@ -11,6 +11,8 @@ module.exports = async function sendChatChannelMessages(client, stdout) {
         && !stdout.includes('<--[HERE]')
         && stdout.includes('[Server thread/INFO]')
         && !stdout.includes('Preparing level "world"')
+        && !stdout.includes('Starting Minecraft server on *:25565')
+        && !(stdout.includes('There are') && stdout.includes('players online:'))
     ) ? true : false
 
     if (!isChatText) return

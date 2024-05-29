@@ -1,17 +1,18 @@
-const fs = require('fs')
-const path = require('path')
+const autoServerStop = require('./listPlayersRelatedFunctions/autoServerStop');
+const playerRegistering = require('./listPlayersRelatedFunctions/playerRegistering');
 
 module.exports = (client, stdout) => {
-    if (stdout.includes('joined the game') || stdout.includes('left the game')) return client.serverProcess.stdin.write('list\n') //first loop
-    if (!stdout.includes('There are ')) return //second loop
+    if (stdout.includes('joined the game') || stdout.includes('left the game')) {
+        client.serverProcess.stdin.write('list\n');
+        return;
+    }
+    if (!stdout.includes('There are ')) return;
 
-    const listPlayersRelatedFunctionsDir = path.join(__dirname, 'listPlayersRelatedFunctions')
-    const listPlayersRelatedFunctions = fs.readdirSync(listPlayersRelatedFunctionsDir)
-
-    console.log('arquivos', listPlayersRelatedFunctions)
-
-    listPlayersRelatedFunctions.forEach(item => {
-        const listPlayerRelatedFunction = require(`${listPlayersRelatedFunctionsDir}/${item}`)
-        listPlayerRelatedFunction(client, stdout)
-    })
-}
+    try {
+        autoServerStop(client, stdout);
+        playerRegistering(client, stdout);
+    }
+    catch (err) {
+        console.log(err);
+    }
+};

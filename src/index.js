@@ -2,6 +2,7 @@ const { Client } = require('discord.js')
 const { readdirSync } = require('fs')
 const config = require(`./config.json`)
 const { registerCommands } = require('./commands')
+const scheduleDailyReset = require('./lib/commandsHelpers/scheduleDailyReset')
 
 if (config.ssh) require('./lib/sshConnection.js')
 
@@ -29,6 +30,7 @@ client.once('ready', async c => {
     await client.user.setPresence({ activities: [{ name: `Server off (${config.currentServer})` }], status: 'dnd' })
     console.log(`Bot on diretamente do ${c.user.id}`)
 
+    scheduleDailyReset(c)
     await registerCommands(c)
 })
 

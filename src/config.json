@@ -3,6 +3,6 @@
     "currentServer": "ATM9",
     "startFileName": "run.sh",
     "baseDirectory": "/home/minecraft/server",
-    "maxDailyPlayerTime": 36000000000000,
+    "maxDailyPlayerTime": 3600000,
     "players": []
 }

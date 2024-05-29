@@ -25,11 +25,10 @@ module.exports = async (client, stdout) => {
     });
 
     configFile.players = client.players;
-
     writeFileSync(configPath, JSON.stringify(configFile, null, 4));
 
     const playersOnlineCount = playersOnline.length;
-    await client.user.setPresence({ activities: [{ name: `Server on!! ${playersOnlineCount} online (${currentServer})` }], status: 'online' });
+    await client.user.setPresence({ activities: [{ name: `Server on!! ${playersOnlineCount} players online (${currentServer})` }], status: 'online' });
 
     playerTimer(client, playersOnline); // Chamar o timer com a lista de players online
 };

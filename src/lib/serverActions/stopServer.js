@@ -13,5 +13,5 @@ module.exports = async (client, interaction) => {
 
     interaction.client.serverProcess = null
     serverProcess.kill()
-    await user.setPresence({ activities: [{ name: `Server off (${currentServer})` }], status: 'dnd' })
+    await client.user.setPresence({ activities: [{ name: `Server off (${currentServer})` }], status: 'dnd' })
 }

@@ -1,7 +1,6 @@
 const playerTimer = require('./playerTimer');
 const { writeFileSync, readFileSync } = require('fs');
 const path = require('path'); // Usar o módulo 'path' para manipulação de caminhos de arquivos
-const { baseDirectory } = require('../../../config.json');
 
 module.exports = async (client, stdout) => {
     const { currentServer } = require('../../../config.json');

@@ -2,7 +2,7 @@ const { Client } = require('discord.js')
 const { readdirSync } = require('fs')
 const config = require(`./config.json`)
 const { registerCommands } = require('./commands')
-const scheduleDailyReset = require('./lib/commandsHelpers/scheduleDailyReset')
+const scheduleDailyReset = require('./lib/scheduleDailyReset')
 
 if (config.ssh) require('./lib/sshConnection.js')
 

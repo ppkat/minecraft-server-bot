@@ -1,4 +1,4 @@
-const { maxDailyPlayerTime } = require('../../config.json');
+const { maxDailyPlayerTime } = require('../config.json');
 const path = require('node:path');
 const { readFileSync, writeFileSync } = require('node:fs');
 
@@ -8,7 +8,7 @@ function resetPlayerTime(client) {
         player.time = maxDailyPlayerTime;
     });
 
-    const configPath = path.join(__dirname, '../../../config.json');
+    const configPath = path.join(__dirname, '../config.json');
     const configFile = readFileSync(configPath);
     const config = JSON.parse(configFile);
 
